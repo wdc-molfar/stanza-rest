@@ -11,6 +11,9 @@
   "license": "MIT",
   "dependencies": {
     "@molfar/py-bridge": "github:wdc-molfar/py-bridge",
+    "ajv": "^8.12.0",
+    "ajv-errors": "^3.0.0",
+    "ajv-formats": "^2.1.1",
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
