@@ -12,18 +12,6 @@ warnings.filterwarnings("ignore", message=r"\[W033\]", category=UserWarning)
 input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
 
-def load_model():
-    model_lang = 'en'
-    model_dir = 'models'
-    # base model
-    stanza.download(model_lang, model_dir)
-    # processors
-    stanza.Pipeline(lang=model_lang,
-                    dir=model_dir,
-                    processors='tokenize,mwt,pos,lemma,ner,sentiment,depparse,coref',
-                    tokenize_no_ssplit=True)
-
-
 # sent analysis func
 def sentan(doc):
     predict = doc.sentences[0].sentiment
@@ -111,11 +99,11 @@ def main(input_json):
 
 if __name__ == '__main__':
 
-    input_json = {"request_id": 1111, "text": "I am currently fighting America's president Joe Biden and his friend Zelensky's army. I hate losing to them."} # None
-    for line in range(1):
+    input_json = None
+    for line in input_stream:
 
         # read json from stdin
-        # input_json = json.loads(line)
+        input_json = json.loads(line)
 
         try:
 
