@@ -118,7 +118,5 @@ if __name__ == '__main__':
                 traceback.TracebackException.from_exception(ex).format())
 
         output_json = json.dumps(output, ensure_ascii=False).encode('utf-8')
-        with open("sample.json", "wb") as outfile:
-            outfile.write(output_json)
         sys.stdout.buffer.write(output_json)
         print()

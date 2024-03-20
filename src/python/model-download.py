@@ -1,8 +1,9 @@
 import stanza
+import os
 
 def load_model():
-    model_lang = 'en'
-    model_dir = 'models'
+    model_lang = os.environ.get('STANZA_SERVER_LANGUAGES')
+    model_dir = os.environ.get('STANZA_RESOURCES_DIR')
     # base model
     stanza.download(model_lang, model_dir)
     # processors
