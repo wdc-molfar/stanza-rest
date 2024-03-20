@@ -1,4 +1,5 @@
 const Bridge = require("@molfar/py-bridge")
+const normalize = require("./normalize-entities")
 const path = require("path")
 const config = require('../../config')
 
@@ -10,7 +11,9 @@ const Worker = class extends Bridge {
 	}
 
 	request(data) {
-		return this.__run(data)
+		let result = this.__run(data)
+		result.response.named_entities = normalize(result.response.named_entities)
+		return result
 	}
 }
 
