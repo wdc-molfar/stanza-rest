@@ -1,4 +1,5 @@
 import stanza
+import os
 
 def load_model():
     model_lang = os.environ.get('STANZA_SERVER_LANGUAGES')
