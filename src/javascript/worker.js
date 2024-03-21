@@ -26,16 +26,19 @@ const Worker = class extends Bridge {
 
 			try {
 
+				console.log(e.toString())
+				console.log("Restart stanza-worker")
 				worker.stop()
 				worker = new Worker()
 				worker.start()
+				
 				return {
 					request: data,
 					error: e.toString()
 				}
 			
 			} catch (e) {
-
+				console.log(e.toString())
 				return {
 					request: data,
 					error: e.toString()
@@ -50,5 +53,6 @@ const Worker = class extends Bridge {
 module.exports =  () => {
 	worker = new Worker()
 	worker.start()
+	console.log("Start stanza-worker")
 	return worker
 }
