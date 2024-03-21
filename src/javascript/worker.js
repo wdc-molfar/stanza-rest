@@ -3,6 +3,8 @@ const normalize = require("./normalize-entities")
 const path = require("path")
 const config = require('../../config')
 
+let worker
+
 const Worker = class extends Bridge {
 
 	constructor(){
@@ -11,17 +13,42 @@ const Worker = class extends Bridge {
 	}
 
 	async request(data) {
-		let result = await this.__nlp(data)
-		if( !result.error && result.data && result.data.response){
-			 // result.data.response.named_entities = require("./raw-example.json")
-			 result.data.response.named_entities = normalize(result.data.response.named_entities || [])
-		}
-		return result
+		try {
+			
+			let result = await this.__nlp(data)
+			if( !result.error && result.data && result.data.response){
+				 // result.data.response.named_entities = require("./raw-example.json")
+				 result.data.response.named_entities = normalize(result.data.response.named_entities || [])
+			}
+			return result
+		
+		} catch (e) {
+
+			try {
+
+				worker.stop()
+				worker = new Worker()
+				worker.start()
+				return {
+					request: data,
+					error: e.toString()
+				}
+			
+			} catch (e) {
+
+				return {
+					request: data,
+					error: e.toString()
+				}
+
+			}
+
+		}	
 	}
 }
 
 module.exports =  () => {
-	let worker = new Worker()
+	worker = new Worker()
 	worker.start()
 	return worker
 }

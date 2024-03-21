@@ -1,4 +1,4 @@
-const { find, first, last } = require("lodash")
+const { find, first, last, isArray } = require("lodash")
 
 
 
@@ -23,8 +23,11 @@ const normalizeEntities = data => {
 			for( let i = index; i < entitiesTags.length && ["B", "I", "E"].includes(entitiesTags[i].ner.split("-")[0]); i++){
 				pool.push(entitiesTags[i])
 				index++
+				if(entitiesTags[i].ner.split("-")[0] == "E"){
+					sequences.push(pool)
+					break		
+				}
 			}
-			sequences.push(pool)
 			continue
 		}
 
@@ -32,9 +35,13 @@ const normalizeEntities = data => {
 	
 	}
 
+
+	// console.log(JSON.stringify(sequences, null, " "))
+
 	let result = sequences.map( s => {
 		if (s[0].ner.startsWith("S-")) {
-			let f = find(data, d => d.id == s[0].id[0])
+			let id = (isArray(s[0].id)) ? s[0].id[0] : s[0].id
+			let f = find(data, d => d.id == id)
 			return {
 				name: f.lemma,
 				tag: last(s[0].ner.split("-")),
@@ -48,7 +55,7 @@ const normalizeEntities = data => {
 		if (s[0].ner.startsWith("B-")) {
 			
 			return {
-				name: s.map( d => d.lemma).join(" "),
+				name: s.map( d => d.text).join(" "),
 				tag: last(s[0].ner.split("-")),
 				range: {
 					start: first(s).start_char,

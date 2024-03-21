@@ -32,11 +32,19 @@ module.exports = worker => ({
     	
     		res.json({
     			request: req.body,
-    			error: `Bad request body format. ${JSON.stringify(req.body, null, '')}\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
+    			error: `Bad request body format.\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
 			})
 		
 		} else {	
-	    
+	    	
+	    	if(!req.body.text){
+	    		res.json({
+	    			request: req.body,
+	    			error: `Bad request. Text should be not empty string.}\n`
+				})
+				return		
+	    	}
+
 	    	let result = await worker.request(req.body)
 	    	// console.log(result)
 	    	let response = (result.data.error) 
