@@ -12,9 +12,9 @@ const Worker = class extends Bridge {
 
 	async request(data) {
 		let result = await this.__nlp(data)
-		// console.log(result)
-		if( !result.error && result.response){
-			 result.response.named_entities = normalize(result.response.named_entities || [])
+		if( !result.error && result.data && result.data.response){
+			 // result.data.response.named_entities = require("./raw-example.json")
+			 result.data.response.named_entities = normalize(result.data.response.named_entities || [])
 		}
 		return result
 	}

@@ -1,3 +1,4 @@
+const { extend } = require("lodash")
 const Ajv = require('ajv').default;
 const ajv = new Ajv({ allErrors: true });
 require('ajv-formats')(ajv);
@@ -30,6 +31,7 @@ module.exports = worker => ({
     	if (validate.errors) {
     	
     		res.json({
+    			request: req.body,
     			error: `Bad request body format. ${JSON.stringify(req.body, null, '')}\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
 			})
 		
@@ -39,12 +41,12 @@ module.exports = worker => ({
 	    	// console.log(result)
 	    	let response = (result.data.error) 
 	    		? 	{
-	    				query: result.request,
+	    				request: result.request,
 	    				error: result.data.error
 	    			}
 	    		:   {
-	    				query: result.request,
-	    				data: result.data
+	    				request: result.request,
+	    				response: extend( {}, result.data.response )
 	    			}	
 
 	    	res.json(response)
