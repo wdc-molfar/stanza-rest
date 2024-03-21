@@ -7,12 +7,15 @@ const Worker = class extends Bridge {
 
 	constructor(){
 		super(config.python)
-		this.use("__run",path.resolve(__dirname,`../python/${config.python.script}`))
+		this.use("__nlp",path.resolve(__dirname,`../python/${config.python.script}`))
 	}
 
-	request(data) {
-		let result = this.__run(data)
-		result.response.named_entities = normalize(result.response.named_entities)
+	async request(data) {
+		let result = await this.__nlp(data)
+		// console.log(result)
+		if( !result.error && result.response){
+			 result.response.named_entities = normalize(result.response.named_entities || [])
+		}
 		return result
 	}
 }

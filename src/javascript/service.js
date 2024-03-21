@@ -10,11 +10,10 @@ const schema = {
 	required: ["text"],
 	properties:{
 		text: {
-			type: "string",
-			additionalProperties: true
-		}
-	},
-	additionalProperties: true
+			type: "string"
+		},
+		additionalProperties: true
+	}
 }
 
 
@@ -37,7 +36,18 @@ module.exports = worker => ({
 		} else {	
 	    
 	    	let result = await worker.request(req.body)
-	    	res.json(result)
+	    	// console.log(result)
+	    	let response = (result.data.error) 
+	    		? 	{
+	    				query: result.request,
+	    				error: result.data.error
+	    			}
+	    		:   {
+	    				query: result.request,
+	    				data: result.data
+	    			}	
+
+	    	res.json(response)
 	    
 	    }	
 
