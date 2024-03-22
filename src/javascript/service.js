@@ -40,14 +40,16 @@ module.exports = worker => ({
 		
 		} else {	
 	    	
-	    	if(!req.body.text){
+	    	if(!req.body.text.trim()){
 	    		res.json({
 	    			request: req.body,
-	    			error: `Bad request. Text should be not empty string.}\n`
+	    			error: `Bad request. The text must not be an empty string and must not contain only whitespaces.`
 				})
 				return		
 	    	}
 
+	    	console.log(worker.getInstance())
+	    	
 	    	let result = await worker.getInstance().request(req.body)
 	    	// console.log(result)
 	    	let response = (result.data.error) 

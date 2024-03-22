@@ -2,12 +2,14 @@ const Bridge = require("@molfar/py-bridge")
 const normalize = require("./normalize-entities")
 const path = require("path")
 const config = require('../../config')
+const uuid = require("uuid").v4
+const exists = require("fs-extra").pathExists
 
 let worker
 
 const restartWorker = () => {
 	
-	console.log("Restart stanza-worker")
+	console.log(`Restart ../python/${config.python.script}`)
 	
 	if(worker){
 		worker.terminate()
@@ -15,6 +17,14 @@ const restartWorker = () => {
 	
 	worker = new Worker()
 	worker.start()
+	
+	worker.getShells()[0].shell.stderr.on("data", message => {
+		console.log(`*** ERROR *** Instance: ${worker.id} for ../python/${config.python.script} not started.`)
+		console.log(message)
+
+	})
+
+	console.log(`Instance: ${worker.id} for ../python/${config.python.script} started.`)
 
 }
 
@@ -22,6 +32,7 @@ const Worker = class extends Bridge {
 
 	constructor(){
 		super(config.python)
+		this.id = uuid()
 		this.use("__nlp",path.resolve(__dirname,`../python/${config.python.script}`))
 	}
 
