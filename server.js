@@ -6,6 +6,7 @@ const path = require("path")
 const config  = require('./config')
 
 const stanzaWorker = require("./src/javascript/worker")()
+// console.log(stanzaWorker)
 
 
 const app = express();

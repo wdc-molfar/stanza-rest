@@ -22,7 +22,7 @@ def main(input_json):
 if __name__=='__main__':
     
     input_json = None
-    # count = 0
+    count = 0
     for line in input_stream:
         
         # read json from stdin

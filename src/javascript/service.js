@@ -27,6 +27,9 @@ module.exports = worker => ({
     method: "post",
     path: "/",
     handler: async (req, res) => {
+
+    	// console.log(worker)
+
 		validate(req.body)
     	if (validate.errors) {
     	
@@ -45,7 +48,7 @@ module.exports = worker => ({
 				return		
 	    	}
 
-	    	let result = await worker.request(req.body)
+	    	let result = await worker.getInstance().request(req.body)
 	    	// console.log(result)
 	    	let response = (result.data.error) 
 	    		? 	{

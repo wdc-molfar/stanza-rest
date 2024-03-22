@@ -12,21 +12,22 @@ const axios = require("axios")
 
 const run = async () => {
 	let index = 1
+	
 	for( const m of messages){
+		
 		let tick = new benchmark.Tick(m)
 		tick.start()
 		let res = await axios.post(
 			"https://stanza.molfar.stream/",
-			{ text: m}
+			{ text: m }
 		)
 		tick.stop()
 		
-		console.log(index, m.length, benchmark.timers[m].parse(benchmark.timers[m].duration()))
+		console.log(index, ". Message length:", m.length, "Duration: ", benchmark.timers[m].parse(benchmark.timers[m].duration()))
+		index++
 
 		if(res.data) {
-			res = res.data
-			let ne = normalize(res.response.named_entities)
-			console.log(ne)
+			console.log(res.data)
 		} else {
 			console.log(res.error)
 		}
