@@ -10,4 +10,5 @@ def load_model():
     stanza.Pipeline(lang=model_lang,
                     dir=model_dir,
                     processors='tokenize,mwt,pos,lemma,ner,sentiment,depparse,coref',
-                    tokenize_no_ssplit=True)
+                    tokenize_no_ssplit=True,
+                    use_gpu=True)

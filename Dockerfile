@@ -28,6 +28,8 @@ RUN python3 -m pip install --no-cache-dir --upgrade \
 RUN python3 -m pip install --no-cache-dir \
     -r requirements.txt
 
+# installing pytorch with CUDA 11.8 - url whl/cu121 for 12.1 
+RUN python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 RUN mkdir -p ./src/python/models
 
