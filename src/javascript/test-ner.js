@@ -23,7 +23,7 @@ const run = async () => {
 		)
 		tick.stop()
 		
-		console.log(index, ". Message length:", m.length, "Duration: ", benchmark.timers[m].parse(benchmark.timers[m].duration()))
+		console.log(index, "Message length:", m.length, "Duration: ", benchmark.timers[m].parse(benchmark.timers[m].duration()))
 		index++
 
 		if(res.data) {
