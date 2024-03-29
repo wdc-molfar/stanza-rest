@@ -48,10 +48,21 @@ module.exports = worker => ({
 				return		
 	    	}
 
-	    	console.log(worker.getInstance())
+	    	if(!worker) {
+	    		try {
+		          worker  = await require("./worker")()
+		        } catch(e) {
+		           console.log(e)
+		           res.json({
+	    				request: req.body,
+	    				error: e.toString()
+	    			})
+		           return
+		        } 
+	    	}
+
+	    	let result =  await ( await worker.getInstance()).request(req.body)
 	    	
-	    	let result = await worker.getInstance().request(req.body)
-	    	// console.log(result)
 	    	let response = (result.data.error) 
 	    		? 	{
 	    				request: result.request,

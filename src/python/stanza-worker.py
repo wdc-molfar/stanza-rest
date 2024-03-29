@@ -12,6 +12,11 @@ warnings.filterwarnings("ignore", message=r"\[W033\]", category=UserWarning)
 input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
 
+output_json = json.dumps({"status":"started"}, ensure_ascii=False).encode('utf-8')
+sys.stdout.buffer.write(output_json)
+print()        
+
+
 # sent analysis func
 def sentan(doc):
     predict = doc.sentences[0].sentiment

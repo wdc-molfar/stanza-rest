@@ -5,41 +5,61 @@ const morgan = require("morgan")
 const path = require("path")
 const config  = require('./config')
 
-const stanzaWorker = require("./src/javascript/worker")()
 // console.log(stanzaWorker)
 
 
-const app = express();
+const run = async () => {
+        
+        let stanzaWorker
+        let error
+        
+        try {
+          stanzaWorker  = await require("./src/javascript/worker")()
+        } catch(e) {
+           console.log(e)
+           error = e.toString() 
+        }   
 
-app.use(CORS({
-    origin: '*'
-}))
+        const app = express();
 
-app.use(morgan('dev'))
+        app.use(CORS({
+            origin: '*'
+        }))
 
-app.use(bodyParser.text());
+        app.use(morgan('dev'))
 
-app.use(bodyParser.urlencoded({
-        parameterLimit: 100000,
-        limit: '50mb',
-        extended: true
-    }));
+        app.use(bodyParser.text());
 
-    app.use(bodyParser.json({
-        limit: '50mb'
-    }));
+        app.use(bodyParser.urlencoded({
+                parameterLimit: 100000,
+                limit: '50mb',
+                extended: true
+            }));
+
+            app.use(bodyParser.json({
+                limit: '50mb'
+            }));
 
 
-routes = [ require("./src/javascript/service")(stanzaWorker) ]
+        routes = [ require("./src/javascript/service")(stanzaWorker) ]
 
-app.get("/", (req,res) => {
-	res.send({service: "@molfar stanza RESTfull service"})
-})
+        app.get("/", (req,res) => {
+            res.send({
+                service: "@molfar stanza RESTfull service",
+                status: (error) ? error : "started"
+            })
+        })
 
-routes.forEach( route => {
-	app[route.method](route.path, route.handler)
-})
+        routes.forEach( route => {
+            app[route.method](route.path, route.handler)
+        })
 
-app.listen(config.service.port, () => {
-  console.log(`@molfar stanza RESTfull service starts on port ${config.service.port} in ${config.service.mode} mode.`);
-});
+        app.listen(config.service.port, () => {
+          console.log(`@molfar stanza RESTfull service starts on port ${config.service.port} in ${config.service.mode} mode.`);
+        });
+
+
+}
+
+run()
+

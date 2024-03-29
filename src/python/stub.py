@@ -11,6 +11,10 @@ input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
 
 
+output_json = json.dumps({"status":"started"}, ensure_ascii=False).encode('utf-8')
+sys.stdout.buffer.write(output_json)
+print()        
+
 
 def main(input_json):
 
@@ -47,4 +51,5 @@ if __name__=='__main__':
         output_json = json.dumps(output, ensure_ascii=False).encode('utf-8')
         sys.stdout.buffer.write(output_json)
         print()
+
         

@@ -7,7 +7,7 @@ const exists = require("fs-extra").pathExists
 
 let worker
 
-const restartWorker = () => {
+const restartWorker = () =>  new Promise( (resolve, reject) => {
 	
 	console.log(`Restart ../python/${config.python.script}`)
 	
@@ -17,16 +17,35 @@ const restartWorker = () => {
 	
 	worker = new Worker()
 	worker.start()
-	
-	worker.getShells()[0].shell.stderr.on("data", message => {
-		console.log(`*** ERROR *** Instance: ${worker.id} for ../python/${config.python.script} not started.`)
+
+
+	const startCb = message => {
 		console.log(message)
+		worker.getShells()[0].shell.stdout.removeListener("data", startCb)			
+		resolve()
+	}
 
+	worker.getShells()[0].shell.stdout.on("data", startCb)
+	
+
+	let m = ""
+	const cb = message => {
+		m += message
+	}
+
+	worker.getShells()[0].shell.stderr.on("data", cb)
+	worker.getShells()[0].shell.on("close", (code, signal) => {
+		// worker.getShells()[0].shell.stderr.removeListener("data", cb)
+		// worker.terminate()
+		reject(`Instance: ${(worker) ? worker.id : 'null'} for ../python/${config.python.script} not started. ${m}`)
+		worker = null
 	})
+	
 
-	console.log(`Instance: ${worker.id} for ../python/${config.python.script} started.`)
 
-}
+	console.log(`Instance: ${worker.id} for ../python/${config.python.script}`)
+
+})
 
 const Worker = class extends Bridge {
 
@@ -38,14 +57,14 @@ const Worker = class extends Bridge {
 
 	async request(data) {
 		try {
-			console.log("worker request", data)
+			// console.log("worker request", data)
 			let result = await this.__nlp(data)
-			console.log(result)
+			// console.log(result)
 			if( !result.error && result.data && result.data.response){
 				 // result.data.response.named_entities = require("./raw-example.json")
 				 result.data.response.named_entities = normalize(result.data.response.named_entities || [])
 			} else {
-				restartWorker()
+				await restartWorker()
 			}
 
 			return result
@@ -55,7 +74,7 @@ const Worker = class extends Bridge {
 			try {
 
 				console.log(e.toString())
-				restartWorker()				
+				await restartWorker()				
 				return {
 					request: data,
 					error: e.toString()
@@ -74,9 +93,22 @@ const Worker = class extends Bridge {
 	}
 }
 
-module.exports =  () => {
-	restartWorker()
-	return {
-		getInstance: () => worker
-	}
+module.exports =   async () => {
+	try {
+		await restartWorker()
+		return {
+			getInstance: async () => {
+				try {
+					if(!worker){
+						await restartWorker()
+					}
+					return worker
+				} catch(e) {
+					throw new Error(e)			
+				}	
+			}	
+		}
+	} catch(e) {
+		throw new Error(e)
+	}	
 }
