@@ -19,6 +19,7 @@ const run = async () => {
 		tick.start()
 		let res = await axios.post(
 			"https://stanza.molfar.stream/",
+			// "http://localhost:3001/",
 			{ text: m }
 		)
 		tick.stop()

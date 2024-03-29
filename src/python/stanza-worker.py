@@ -76,7 +76,7 @@ def depparse(doc):
 
 def main(input_json):
     model_lang = 'en'
-    model_dir = 'models'
+    model_dir = './src/python/models'
     text = input_json['text']
     output_json = input_json.copy()
     nlp = stanza.Pipeline(
@@ -85,7 +85,8 @@ def main(input_json):
         processors='tokenize,mwt,pos,lemma,ner,sentiment,depparse,coref',
         download_method=stanza.DownloadMethod.REUSE_RESOURCES,
         logging_level='WARN',
-        tokenize_no_ssplit=True)
+        tokenize_no_ssplit=True,
+        use_gpu=True)
     doc = nlp(text)
     mydict = doc.sentences[0].to_dict()
     dump = None
