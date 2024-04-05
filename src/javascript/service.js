@@ -23,59 +23,118 @@ const validate = ajv.compile(schema)
 
 
 
-module.exports = worker => ({
-    method: "post",
-    path: "/",
-    handler: async (req, res) => {
+module.exports = (stanzaWorker, summaryWorker) => ([
 
-    	// console.log(worker)
+	{
+	    method: "post",
+	    path: "/stanza/",
+	    handler: async (req, res) => {
 
-		validate(req.body)
-    	if (validate.errors) {
-    	
-    		res.json({
-    			request: req.body,
-    			error: `Bad request body format.\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
-			})
-		
-		} else {	
+	    	// console.log(worker)
+
+			validate(req.body)
+	    	if (validate.errors) {
 	    	
-	    	if(!req.body.text.trim()){
 	    		res.json({
 	    			request: req.body,
-	    			error: `Bad request. The text must not be an empty string and must not contain only whitespaces.`
+	    			error: `Bad request body format.\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
 				})
-				return		
-	    	}
+			
+			} else {	
+		    	
+		    	if(!req.body.text.trim()){
+		    		res.json({
+		    			request: req.body,
+		    			error: `Bad request. The text must not be an empty string and must not contain only whitespaces.`
+					})
+					return		
+		    	}
 
-	    	if(!worker) {
-	    		try {
-		          worker  = await require("./worker")()
-		        } catch(e) {
-		           console.log(e)
-		           res.json({
-	    				request: req.body,
-	    				error: e.toString()
-	    			})
-		           return
-		        } 
-	    	}
+		    	if(!stanzaWorker) {
+		    		try {
+			          stanzaWorker  = await require("./stanza-worker")()
+			        } catch(e) {
+			           console.log(e)
+			           res.json({
+		    				request: req.body,
+		    				error: e.toString()
+		    			})
+			           return
+			        } 
+		    	}
 
-	    	let result =  await ( await worker.getInstance()).request(req.body)
+		    	let result =  await ( await stanzaWorker.getInstance()).request(req.body)
+		    	
+		    	let response = (result.data.error) 
+		    		? 	{
+		    				request: result.request,
+		    				error: result.data.error
+		    			}
+		    		:   {
+		    				request: result.request,
+		    				response: extend( {}, result.data.response )
+		    			}	
+
+		    	res.json(response)
+		    
+		    }	
+    	}
+	},
+	
+	{
+	    method: "post",
+	    path: "/summary/",
+	    handler: async (req, res) => {
+
+	    	// console.log(worker)
+
+			validate(req.body)
+	    	if (validate.errors) {
 	    	
-	    	let response = (result.data.error) 
-	    		? 	{
-	    				request: result.request,
-	    				error: result.data.error
-	    			}
-	    		:   {
-	    				request: result.request,
-	    				response: extend( {}, result.data.response )
-	    			}	
+	    		res.json({
+	    			request: req.body,
+	    			error: `Bad request body format.\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
+				})
+			
+			} else {	
+		    	
+		    	if(!req.body.text.trim()){
+		    		res.json({
+		    			request: req.body,
+		    			error: `Bad request. The text must not be an empty string and must not contain only whitespaces.`
+					})
+					return		
+		    	}
 
-	    	res.json(response)
-	    
-	    }	
+		    	if(!summaryWorker) {
+		    		try {
+			          stanzaWorker  = await require("./summary-worker")()
+			        } catch(e) {
+			           console.log(e)
+			           res.json({
+		    				request: req.body,
+		    				error: e.toString()
+		    			})
+			           return
+			        } 
+		    	}
 
-    }
-})
+		    	let result =  await ( await summaryWorker.getInstance()).request(req.body)
+		    	
+		    	let response = (result.data.error) 
+		    		? 	{
+		    				request: result.request,
+		    				error: result.data.error
+		    			}
+		    		:   {
+		    				request: result.request,
+		    				response: extend( {}, result.data.response )
+		    			}	
+
+		    	res.json(response)
+		    
+		    }	
+    	}
+	}
+
+])

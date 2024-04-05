@@ -36,7 +36,7 @@ if __name__=='__main__':
             request = main(input_json) 
             # output = main(input_json)
             count = count+1
-            output = {"request": request, "response": {"script":"stub.py","requestCount": count}}
+            output = {"request": request, "response": {"script":"stub1.py","requestCount": count}}
 
         except BaseException as ex:
             ex_type, ex_value, ex_traceback = sys.exc_info()            

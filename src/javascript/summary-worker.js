@@ -9,7 +9,7 @@ let worker
 
 const restartWorker = () =>  new Promise( (resolve, reject) => {
 	
-	console.log(`Restart ../python/${config.python.script}`)
+	console.log(`Restart ../python/${config.python.script.summary}`)
 	
 	if(worker){
 		worker.terminate()
@@ -37,13 +37,13 @@ const restartWorker = () =>  new Promise( (resolve, reject) => {
 	worker.getShells()[0].shell.on("close", (code, signal) => {
 		// worker.getShells()[0].shell.stderr.removeListener("data", cb)
 		// worker.terminate()
-		reject(`Instance: ${(worker) ? worker.id : 'null'} for ../python/${config.python.script} not started. ${m}`)
+		reject(`Instance: ${(worker) ? worker.id : 'null'} for ../python/${config.python.script.summary} not started. ${m}`)
 		worker = null
 	})
 	
 
 
-	console.log(`Instance: ${worker.id} for ../python/${config.python.script}`)
+	console.log(`Instance: ${worker.id} for ../python/${config.python.script.summary}`)
 
 })
 
@@ -52,13 +52,13 @@ const Worker = class extends Bridge {
 	constructor(){
 		super(config.python)
 		this.id = uuid()
-		this.use("__nlp",path.resolve(__dirname,`../python/${config.python.script}`))
+		this.use("__summary",path.resolve(__dirname,`../python/${config.python.script.summary}`))
 	}
 
 	async request(data) {
 		try {
 			// console.log("worker request", data)
-			let result = await this.__nlp(data)
+			let result = await this.__summary(data)
 			// console.log(result)
 			if( !result.error && result.data && result.data.response){
 				 // result.data.response.named_entities = require("./raw-example.json")

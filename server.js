@@ -11,10 +11,20 @@ const config  = require('./config')
 const run = async () => {
         
         let stanzaWorker
+        let summaryWorker
         let error
         
+        console.log(config)
+
         try {
-          stanzaWorker  = await require("./src/javascript/worker")()
+          stanzaWorker  = await require("./src/javascript/stanza-worker")()
+        } catch(e) {
+           console.log(e)
+           error = e.toString() 
+        }
+
+        try {
+          summaryWorker  = await require("./src/javascript/summary-worker")()
         } catch(e) {
            console.log(e)
            error = e.toString() 
@@ -41,7 +51,7 @@ const run = async () => {
             }));
 
 
-        routes = [ require("./src/javascript/service")(stanzaWorker) ]
+        routes = require("./src/javascript/service")(stanzaWorker, summaryWorker) 
 
         app.get("/", (req,res) => {
             res.send({
