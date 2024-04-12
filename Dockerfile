@@ -32,14 +32,17 @@ RUN python3 -m pip install --no-cache-dir \
 RUN python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 RUN mkdir -p ./src/python/models
+RUN mkdir -p ./src/python/sum-models
 
 ENV STANZA_RESOURCES_DIR=/var/stanza-server/models
 ENV STANZA_SERVER_LANGUAGES=en
+ENV SUMMARY_RESOURCES_DIR=/var/stanza-server/sum-models
 
 RUN python3 ./src/python/model-download.py
 
 #prevent downloading stanza models on every restart
 VOLUME ["./src/python/models"]
+VOLUME ["./src/python/sum-models"]
 
 RUN npm install
 

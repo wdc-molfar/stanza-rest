@@ -62,7 +62,7 @@ const Worker = class extends Bridge {
 			// console.log(result)
 			if( !result.error && result.data && result.data.response){
 				 // result.data.response.named_entities = require("./raw-example.json")
-				 result.data.response.named_entities = normalize(result.data.response.named_entities || [])
+				 // result.data.response.named_entities = normalize(result.data.response.named_entities || [])
 			} else {
 				await restartWorker()
 			}
