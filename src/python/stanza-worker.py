@@ -11,6 +11,16 @@ warnings.filterwarnings("ignore", message=r"\[W033\]", category=UserWarning)
 
 input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
+model_lang = 'en'
+model_dir = './src/python/models'
+nlp = stanza.Pipeline(
+        lang=model_lang,
+        dir=model_dir,
+        processors='tokenize,mwt,pos,lemma,ner,sentiment,depparse,coref',
+        download_method=stanza.DownloadMethod.REUSE_RESOURCES,
+        logging_level='WARN',
+        tokenize_no_ssplit=True,
+        use_gpu=True)
 
 output_json = json.dumps({"status":"started"}, ensure_ascii=False).encode('utf-8')
 sys.stdout.buffer.write(output_json)
@@ -80,18 +90,8 @@ def depparse(doc):
 
 
 def main(input_json):
-    model_lang = 'en'
-    model_dir = './src/python/models'
     text = input_json['text']
     output_json = input_json.copy()
-    nlp = stanza.Pipeline(
-        lang=model_lang,
-        dir=model_dir,
-        processors='tokenize,mwt,pos,lemma,ner,sentiment,depparse,coref',
-        download_method=stanza.DownloadMethod.REUSE_RESOURCES,
-        logging_level='WARN',
-        tokenize_no_ssplit=True,
-        use_gpu=True)
     doc = nlp(text)
     mydict = doc.sentences[0].to_dict()
     dump = None
