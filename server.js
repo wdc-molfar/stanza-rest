@@ -23,12 +23,12 @@ const run = async () => {
            error = e.toString() 
         }
 
-        try {
-          summaryWorker  = await require("./src/javascript/summary-worker")()
-        } catch(e) {
-           console.log(e)
-           error = e.toString() 
-        }   
+        // try {
+        //   summaryWorker  = await require("./src/javascript/summary-worker")()
+        // } catch(e) {
+        //    console.log(e)
+        //    error = e.toString() 
+        // }   
 
         const app = express();
 

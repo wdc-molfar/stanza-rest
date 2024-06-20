@@ -81,60 +81,60 @@ module.exports = (stanzaWorker, summaryWorker) => ([
     	}
 	},
 	
-	{
-	    method: "post",
-	    path: "/summary/",
-	    handler: async (req, res) => {
+	// {
+	//     method: "post",
+	//     path: "/summary/",
+	//     handler: async (req, res) => {
 
-	    	// console.log(worker)
+	//     	// console.log(worker)
 
-			validate(req.body)
-	    	if (validate.errors) {
+	// 		validate(req.body)
+	//     	if (validate.errors) {
 	    	
-	    		res.json({
-	    			request: req.body,
-	    			error: `Bad request body format.\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
-				})
+	//     		res.json({
+	//     			request: req.body,
+	//     			error: `Bad request body format.\n${validate.errors.map( e => "On the path " + (e.instancePath || '#') + ":" + e.message ).join('')}`
+	// 			})
 			
-			} else {	
+	// 		} else {	
 		    	
-		    	if(!req.body.text.trim()){
-		    		res.json({
-		    			request: req.body,
-		    			error: `Bad request. The text must not be an empty string and must not contain only whitespaces.`
-					})
-					return		
-		    	}
+	// 	    	if(!req.body.text.trim()){
+	// 	    		res.json({
+	// 	    			request: req.body,
+	// 	    			error: `Bad request. The text must not be an empty string and must not contain only whitespaces.`
+	// 				})
+	// 				return		
+	// 	    	}
 
-		    	if(!summaryWorker) {
-		    		try {
-			          stanzaWorker  = await require("./summary-worker")()
-			        } catch(e) {
-			           console.log(e)
-			           res.json({
-		    				request: req.body,
-		    				error: e.toString()
-		    			})
-			           return
-			        } 
-		    	}
+	// 	    	if(!summaryWorker) {
+	// 	    		try {
+	// 		          stanzaWorker  = await require("./summary-worker")()
+	// 		        } catch(e) {
+	// 		           console.log(e)
+	// 		           res.json({
+	// 	    				request: req.body,
+	// 	    				error: e.toString()
+	// 	    			})
+	// 		           return
+	// 		        } 
+	// 	    	}
 
-		    	let result =  await ( await summaryWorker.getInstance()).request(req.body)
+	// 	    	let result =  await ( await summaryWorker.getInstance()).request(req.body)
 		    	
-		    	let response = (result.data.error) 
-		    		? 	{
-		    				request: result.request,
-		    				error: result.data.error
-		    			}
-		    		:   {
-		    				request: result.request,
-		    				response: extend( {}, result.data.response )
-		    			}	
+	// 	    	let response = (result.data.error) 
+	// 	    		? 	{
+	// 	    				request: result.request,
+	// 	    				error: result.data.error
+	// 	    			}
+	// 	    		:   {
+	// 	    				request: result.request,
+	// 	    				response: extend( {}, result.data.response )
+	// 	    			}	
 
-		    	res.json(response)
+	// 	    	res.json(response)
 		    
-		    }	
-    	}
-	}
+	// 	    }	
+ //    	}
+	// }
 
 ])
