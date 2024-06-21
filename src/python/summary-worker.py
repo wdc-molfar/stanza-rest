@@ -12,6 +12,10 @@ warnings.filterwarnings("ignore", message=r"\[W033\]", category=UserWarning)
 
 input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
+summarizer = transformers.pipeline(
+        task="summarization",
+        model='./src/python/sum-models',
+        device=0)
 
 output_json = json.dumps({"status": "started"}, ensure_ascii=False).encode('utf-8')
 sys.stdout.buffer.write(output_json)
@@ -21,11 +25,6 @@ print()
 def main(input_json):
     text = input_json['text']
     output_json = input_json.copy()
-    summarizer = transformers.pipeline(
-        task="summarization",
-        model='./src/python/sum-models',
-        device=0)
-
     text = summarizer(text, max_length=200, min_length=30, do_sample=False)[0]
     output_json = {"request": output_json, "response": text}
     return output_json

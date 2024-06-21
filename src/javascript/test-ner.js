@@ -24,8 +24,8 @@ const run = async () => {
 		tick.start()
 		let res = await axios.post(
 			// "https://stanza.molfar.stream/",
-			// "http://localhost:3001/stanza/",
-			"https://stanza-nvidia.molfar.science/stanza/",
+			"http://localhost:3001/stanza/",
+			// "https://stanza-nvidia.molfar.science/stanza/",
 			{ text: m }
 		)
 		tick.stop()
@@ -41,33 +41,33 @@ const run = async () => {
 
 	}
 
-	// console.log("--------------------------------------------------------------")
-	// console.log("------------------------ SUMMARY -----------------------------")
-	// console.log("--------------------------------------------------------------")
+	 console.log("--------------------------------------------------------------")
+	 console.log("------------------------ SUMMARY -----------------------------")
+	 console.log("--------------------------------------------------------------")
 
-	// index = 1
-	// for( const m of messages){
+	 index = 1
+	 for( const m of messages){
 		
-	// 	let tick = new benchmark.Tick(m)
-	// 	tick.start()
-	// 	let res = await axios.post(
-	// 		// "https://stanza.molfar.stream/",
-	// 		// "http://localhost:3001/summary/",
-	// 		"https://stanza-nvidia.molfar.stream/summary/",
-	// 		{ text: m }
-	// 	)
-	// 	tick.stop()
+	 	let tick = new benchmark.Tick(m)
+	 	tick.start()
+	 	let res = await axios.post(
+	 		// "https://stanza.molfar.stream/",
+	 		// "http://localhost:3001/summary/",
+	 		"https://stanza-nvidia.molfar.stream/summary/",
+	 		{ text: m }
+	 	)
+	 	tick.stop()
 		
-	// 	console.log(index, "Message length:", m.length, "Duration: ", benchmark.timers[m].parse(benchmark.timers[m].duration()))
-	// 	index++
+	 	console.log(index, "Message length:", m.length, "Duration: ", benchmark.timers[m].parse(benchmark.timers[m].duration()))
+	 	index++
 
-	// 	if(res.data) {
-	// 		console.log(res.data)
-	// 	} else {
-	// 		console.log(res.error)
-	// 	}
+	 	if(res.data) {
+	 		console.log(res.data)
+	 	} else {
+	 		console.log(res.error)
+	 	}
 
-	// }
+	 }
 
 }
 

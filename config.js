@@ -14,7 +14,7 @@ module.exports = {
 		pythonOptions: ['-u'],
 		script: {
 			stanza: 'stanza-worker.py', // TODO change to real stanza worker script stanza-worker.py
-			// summary: 'stub1.py' //'summary-worker.py'
+			summary: 'summary-worker.py' // 'summary-worker.py'
 		},	
 		pythonPath: (process.env.NODE_ENV && process.env.NODE_ENV == "production") ? 'python' : 'python.exe'
 	}
