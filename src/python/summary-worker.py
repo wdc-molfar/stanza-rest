@@ -12,9 +12,10 @@ warnings.filterwarnings("ignore", message=r"\[W033\]", category=UserWarning)
 
 input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
+model_dir = os.environ.get('SUMMARY_RESOURCES_DIR')
 summarizer = transformers.pipeline(
         task="summarization",
-        model='./src/python/sum-models',
+        model=model_dir,
         device=0)
 
 output_json = json.dumps({"status": "started"}, ensure_ascii=False).encode('utf-8')

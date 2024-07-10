@@ -16,7 +16,7 @@ def load_model():
                     tokenize_no_ssplit=True,
                     use_gpu=True)
     # summary download
-    pipe = pipeline(task="summarization", model="philschmid/bart-large-cnn-samsum", device=0)
+    pipe = pipeline(task="summarization", model="philschmid/bart-large-cnn-samsum", device="cpu")
     pipe.save_pretrained(sum_model_dir)
 
 

@@ -11,8 +11,8 @@ warnings.filterwarnings("ignore", message=r"\[W033\]", category=UserWarning)
 
 input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
-model_lang = 'en'
-model_dir = './src/python/models'
+model_lang = os.environ.get('STANZA_SERVER_LANGUAGES')
+model_dir = os.environ.get('STANZA_RESOURCES_DIR')
 nlp = stanza.Pipeline(
         lang=model_lang,
         dir=model_dir,
